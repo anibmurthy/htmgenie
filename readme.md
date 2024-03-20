@@ -66,3 +66,9 @@ For more information, you can use the `--help` flag with the `generate` command:
 ```shell
 htmgenie generate --help
 ```
+
+## References
+
+- [Cobra](https://github.com/spf13/cobra) - Interface used to create CLI interface
+- [Cobra CLI](https://github.com/spf13/cobra-cli) - To generate scaffolded framework with cobra layout
+- [gomponents](https://github.com/maragudk/gomponents) - Potential library that provides a rich library to create html structs to build the response. It provides better readability model.
