@@ -1,0 +1,25 @@
+# Executables
+bin
+info/*
+objects/*
+
+# editor and IDE paraphernalia
+.envrc
+.idea
+.vscode
+
+# Any temporary files 
+*.temp.*
+htmgenie.log
+
+# OS specific files
+.DS_Store
+
+#Test generated files
+./cmd/testdata/dummy.html
+./cmd/testdata/dummy2.html
+
+# Test coverage files
+coverage
+coverage.txt
+cover.html
