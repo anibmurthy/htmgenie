@@ -76,7 +76,3 @@ func RootCmdFlags(rootCmd *cobra.Command) {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
-func init() {
-
-}

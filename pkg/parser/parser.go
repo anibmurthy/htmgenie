@@ -17,7 +17,7 @@ type Parser struct {
 }
 
 type Chunk struct {
-	content string
+	content Content
 	Ready   bool
 }
 
@@ -29,20 +29,12 @@ func (c *Chunk) Add(s string) bool {
 	} else {
 		c.Ready = false
 	}
-	if c.content == "" {
-		c.content = s
-	} else {
-		c.content = fmt.Sprintf("%s\n%s", c.content, s)
-	}
+	c.content.Add(s)
 	return true
 }
 
 func (c *Chunk) Format() string {
-	// Take care of url references
-	res := mapper.Url(c.content)
-
-	// Since there is no heading, consider this to be <p></p> content
-	res = mapper.Paragraph(res)
+	res := c.content.Format()
 
 	c.Reset()
 
@@ -51,11 +43,11 @@ func (c *Chunk) Format() string {
 
 func (c *Chunk) Reset() {
 	c.Ready = false
-	c.content = ""
+	c.content.Reset()
 }
 
 func (c *Chunk) Active() bool {
-	return c.content != ""
+	return c.content.Active()
 }
 
 func New(fp io.Reader, w io.Writer, l *zap.Logger) *Parser {
@@ -70,6 +62,7 @@ func (p *Parser) Generate() {
 	// Read each line of the mark down and do the needful
 	scanner := bufio.NewScanner(p.filePath)
 	chunk := Chunk{}
+	// isNew := true
 
 	for scanner.Scan() {
 		// Each line is run here
@@ -92,8 +85,12 @@ func (p *Parser) Generate() {
 			fmt.Fprintln(p.Writer, line)
 			continue
 		} else {
-			if !chunk.Add(line) {
+			if chunk.content == nil || !chunk.content.Active() {
+				chunk.content = NewContent(line)
+				// isNew = false
+			} else if !chunk.Add(line) {
 				fmt.Fprintln(p.Writer, chunk.Format())
+				// isNew = true
 			} else {
 				// Create a new chunk if necessary depending on future scope.
 				// Ex: If a new element is present without a newline separation.

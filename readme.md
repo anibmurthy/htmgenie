@@ -67,6 +67,10 @@ For more information, you can use the `--help` flag with the `generate` command:
 htmgenie generate --help
 ```
 
+## Design
+
+A detailed design is available [here](./docs/design.md)
+
 ## References
 
 - [Cobra](https://github.com/spf13/cobra) - Interface used to create CLI interface

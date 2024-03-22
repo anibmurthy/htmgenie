@@ -43,10 +43,8 @@ func Validate(cmd *cobra.Command, args []string) error {
 	var err error
 
 	if fileArg == "" {
-		l.Error("Required argument 'file' not found")
-		err = fmt.Errorf("file is a required field.")
+		err = fmt.Errorf("Required argument 'file' not found")
 	} else if !strings.HasSuffix(fileArg, ".md") {
-		l.Error("Only files with '.md' extensions are supported")
 		err = fmt.Errorf("Only files with '.md' extensions are supported")
 	}
 
@@ -54,12 +52,15 @@ func Validate(cmd *cobra.Command, args []string) error {
 		// Check the size of the file.
 		// TODO: This can be made configurable
 		if size := info.Size(); size > 5242880 {
-			err = fmt.Errorf("File size is more than the allowed limit (5MB): %v", size/1048576)
+			err = fmt.Errorf("File size is more than the allowed limit (5MB)")
 		}
 	} else {
-
 		// Check that the file exists
-		l.Error("File not found in specified path")
+		err = fmt.Errorf("File not found in specified path: %s", fileArg)
+	}
+
+	if err != nil {
+		l.Error(err.Error())
 	}
 	return err
 }
@@ -99,6 +100,7 @@ func GenerateCmdRun(cmd *cobra.Command, args []string) {
 
 	parser := parser.New(file, ofile, log)
 	parser.Generate()
+	fmt.Printf("html generation successful. File created at: %s\n", opath)
 	log.Sugar().Info("Markdown generation took: ", time.Since(start))
 }
 
